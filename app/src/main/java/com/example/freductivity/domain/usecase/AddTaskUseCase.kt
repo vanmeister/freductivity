@@ -7,7 +7,7 @@ class AddTaskUseCase @Inject constructor(
     private val taskRepository: TaskRepository
 ) {
 
-    suspend operator fun invoke(title: String, isDone: Boolean) {
-        taskRepository.addTask(title, isDone)
+    suspend operator fun invoke(title: String) {
+        taskRepository.addTask(title)
     }
 }

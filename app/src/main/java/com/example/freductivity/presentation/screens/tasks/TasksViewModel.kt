@@ -3,6 +3,7 @@ package com.example.freductivity.presentation.screens.tasks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.freductivity.domain.entity.Task
+import com.example.freductivity.domain.usecase.AddTaskUseCase
 import com.example.freductivity.domain.usecase.GetAllTasksUseCase
 import com.example.freductivity.domain.usecase.SwitchDoneStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,10 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     getAllTasksUseCase: GetAllTasksUseCase,
+    private val addTaskUseCase: AddTaskUseCase,
     private val switchDoneStatusUseCase: SwitchDoneStatusUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<TasksState>(TasksState())
+    private val _state = MutableStateFlow(TasksState())
 
     val state = _state.asStateFlow()
 
@@ -38,7 +40,7 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch {
             when (command) {
                 is TasksCommand.AddTask -> {
-
+                    addTaskUseCase(command.title.trim())
                 }
 
                 is TasksCommand.SwitchDoneStatus -> {

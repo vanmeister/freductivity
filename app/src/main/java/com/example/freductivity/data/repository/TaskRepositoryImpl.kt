@@ -12,8 +12,8 @@ import javax.inject.Inject
 class TaskRepositoryImpl @Inject constructor(
     private val tasksDao: TasksDao,
 ) : TaskRepository {
-    override suspend fun addTask(title: String, isDone: Boolean) {
-        tasksDao.addTask(TaskDbModel(0, title, isDone))
+    override suspend fun addTask(title: String) {
+        tasksDao.addTask(TaskDbModel(0, title, false))
     }
 
     override suspend fun deleteTask(taskId: Int) {
