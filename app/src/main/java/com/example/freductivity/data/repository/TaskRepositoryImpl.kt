@@ -2,15 +2,17 @@ package com.example.freductivity.data.repository
 
 import com.example.freductivity.data.local.TaskDbModel
 import com.example.freductivity.data.local.TasksDao
+import com.example.freductivity.data.mapper.toEntities
 import com.example.freductivity.domain.entity.Task
 import com.example.freductivity.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
     private val tasksDao: TasksDao,
 ) : TaskRepository {
-    override suspend fun addTask(taskId: Int, title: String, isDone: Boolean) {
+    override suspend fun addTask(title: String, isDone: Boolean) {
         tasksDao.addTask(TaskDbModel(0, title, isDone))
     }
 
@@ -32,6 +34,9 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override fun getAllTasks(): Flow<List<Task>> {
-        return tasksDao.getAllTasks()
+        val tasks = tasksDao.getAllTasks()
+        return tasks.map {
+            it.toEntities()
+        }
     }
 }

@@ -25,6 +25,6 @@ interface TasksDao {
     @Query("SELECT * FROM tasks WHERE id == :taskId")
     suspend fun getTask(taskId: Int): TaskDbModel
 
-    @Query("SELECT * FROM tasks")
-    fun getAllTasks(): Flow<List<Task>>
+    @Query("SELECT * FROM tasks ORDER BY isDone DESC, id DESC")
+    fun getAllTasks(): Flow<List<TaskDbModel>>
 }

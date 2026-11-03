@@ -31,12 +31,12 @@ fun TasksScreen(
                 .padding(16.dp),
             contentPadding = innerPadding
         ) {
-            items(
-                items = state.value.tasks,
-                key = { task -> task.id }
-            ) { task ->
-                Task(task = task)
-            }
+//            items(
+//                items = state.value.tasks,
+//                key = { task -> task.id }
+//            ) { task ->
+//                Task(task = task)
+//            }
         }
     }
 }

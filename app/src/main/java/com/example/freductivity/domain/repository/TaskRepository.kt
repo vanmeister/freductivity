@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository {
 
     suspend fun addTask(
-        taskId: Int,
         title: String,
         isDone: Boolean
     )
