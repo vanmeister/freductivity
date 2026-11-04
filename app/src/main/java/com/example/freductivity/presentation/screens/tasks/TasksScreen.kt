@@ -3,14 +3,12 @@ package com.example.freductivity.presentation.screens.tasks
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,6 +50,17 @@ fun TasksScreen(
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     var title by rememberSaveable { mutableStateOf("") }
 
+    val closeModal: () -> Unit = {
+        scope.launch {
+            sheetState.hide()
+        }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                showBottomSheet = false
+            }
+            title = ""
+        }
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = { TasksTopBar() },
@@ -70,54 +79,39 @@ fun TasksScreen(
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp),
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    state.value.tasks.filter {
-                        !it.isDone
-                    }.forEach { task ->
-                        TaskElement(
-                            task = task,
-                            viewmodel = viewModel
-                        )
+            items(
+                items = state.value.tasks,
+                key = { task -> task.id }
+            ) { task ->
+                TaskElement(
+                    task = task,
+                    switchDoneStatus = {
+                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(it))
                     }
-                }
-
-            }
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
+                )
             }
             item {
                 Text(
-                    text = "Выполнено · ${
-                        state.value.tasks.filter {
-                            it.isDone
-                        }.size
-                    }",
+                    text = stringResource(
+                        R.string.done_count_tasks_screen,
+                        state.value.finishedTasksCount
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(8.dp))
             }
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    state.value.tasks.filter {
-                        it.isDone
-                    }.forEach { task ->
-                        TaskElement(
-                            task = task,
-                            viewmodel = viewModel
-                        )
+            items(
+                items = state.value.finishedTasks,
+                key = { task -> task.id }
+            ) { task ->
+                TaskElement(
+                    task = task,
+                    switchDoneStatus = {
+                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(it))
                     }
-                }
+                )
             }
         }
 
@@ -145,15 +139,6 @@ fun TasksScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        val closeModal: () -> Unit = {
-                            scope.launch {
-                                sheetState.hide()
-                            }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    showBottomSheet = false
-                                }
-                            }
-                        }
                         TextButton(
                             onClick = {
                                 closeModal()
@@ -161,19 +146,14 @@ fun TasksScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.cancel_modal),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary
+                                style = MaterialTheme.typography.labelLarge
                             )
                         }
                         Button(
                             onClick = {
-                                closeModal()
                                 viewModel.processCommand(TasksCommand.AddTask(title))
-                                title = ""
+                                closeModal()
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            ),
                             enabled = title.isNotBlank()
                         ) {
                             Text(
@@ -197,7 +177,7 @@ fun TasksTopBar(
         modifier = modifier,
         title = {
             Text(
-                text = "Сегодня",
+                text = stringResource(R.string.today_topbar),
                 style = MaterialTheme.typography.headlineLarge
             )
         }
@@ -208,7 +188,7 @@ fun TasksTopBar(
 fun TaskElement(
     modifier: Modifier = Modifier,
     task: Task,
-    viewmodel: TasksViewModel
+    switchDoneStatus: (Int) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -222,7 +202,7 @@ fun TaskElement(
             Checkbox(
                 checked = task.isDone,
                 onCheckedChange = {
-                    viewmodel.processCommand(TasksCommand.SwitchDoneStatus(task.id))
+                    switchDoneStatus(task.id)
                 }
             )
             Text(

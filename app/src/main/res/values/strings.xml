@@ -4,4 +4,6 @@
     <string name="new_task_modal">Новая задача</string>
     <string name="cancel_modal">Отмена</string>
     <string name="add_task_modal">Добавить</string>
+    <string name="today_topbar">Сегодня</string>
+    <string name="done_count_tasks_screen">Выполнено · %1$d</string>
 </resources>
