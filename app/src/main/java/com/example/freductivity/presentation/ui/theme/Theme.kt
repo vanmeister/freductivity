@@ -8,28 +8,55 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Indigo80,
+    onPrimary = Indigo20,
+    primaryContainer = Indigo30,
+    onPrimaryContainer = Indigo90,
+
+    background = Neutral6,
+    onBackground = Neutral90,
+    surface = Neutral6,
+    onSurface = Neutral90,
+    onSurfaceVariant = NeutralVariant70,
+    surfaceContainerLow = Neutral10,
+    surfaceContainerHigh = Neutral17,
+    surfaceContainerHighest = Neutral22,
+
+    outline = NeutralVariant60,
+    outlineVariant = NeutralVariant30,
+
+    error = Red80,
+    onError = Red20,
+
+    scrim = Color.Black,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = Indigo40,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primaryContainer = Indigo90,
+    onPrimaryContainer = Indigo15,
+
+    background = Neutral98,
+    onBackground = Neutral10,
+    surface = Neutral98,
+    onSurface = Neutral10,
+    onSurfaceVariant = NeutralVariant35,
+    surfaceContainerLow = Neutral95,
+    surfaceContainerHigh = Neutral91,
+    surfaceContainerHighest = Neutral86,
+
+    outline = NeutralVariant47,
+    outlineVariant = NeutralVariant80,
+
+    error = Red40,
+    onError = Color.White,
+
+    scrim = Color.Black,
 )
 
 @Composable
