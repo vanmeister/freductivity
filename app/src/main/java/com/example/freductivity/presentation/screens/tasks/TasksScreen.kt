@@ -118,7 +118,8 @@ fun TasksScreen(
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
-                    closeModal()
+                    showBottomSheet = false
+                    title = ""
                 },
                 sheetState = sheetState,
             ) {

@@ -44,7 +44,10 @@ class TasksViewModel @Inject constructor(
         viewModelScope.launch {
             when (command) {
                 is TasksCommand.AddTask -> {
-                    addTaskUseCase(command.title.trim())
+                    val title = command.title.trim()
+                    if (title.isNotBlank()) {
+                        addTaskUseCase(title)
+                    }
                 }
 
                 is TasksCommand.SwitchDoneStatus -> {
