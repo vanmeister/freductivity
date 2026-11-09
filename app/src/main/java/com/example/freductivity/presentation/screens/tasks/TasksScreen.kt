@@ -83,13 +83,13 @@ fun TasksScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
-                items = state.value.tasks,
+                items = state.value.currentTasks,
                 key = { task -> task.id }
             ) { task ->
                 TaskElement(
                     task = task,
                     switchDoneStatus = {
-                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(it))
+                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(task.id))
                     }
                 )
             }
@@ -109,7 +109,7 @@ fun TasksScreen(
                 TaskElement(
                     task = task,
                     switchDoneStatus = {
-                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(it))
+                        viewModel.processCommand(TasksCommand.SwitchDoneStatus(task.id))
                     }
                 )
             }
@@ -118,7 +118,7 @@ fun TasksScreen(
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = {
-                    showBottomSheet = false
+                    closeModal()
                 },
                 sheetState = sheetState,
             ) {
@@ -188,7 +188,7 @@ fun TasksTopBar(
 fun TaskElement(
     modifier: Modifier = Modifier,
     task: Task,
-    switchDoneStatus: (Int) -> Unit
+    switchDoneStatus: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -202,7 +202,7 @@ fun TaskElement(
             Checkbox(
                 checked = task.isDone,
                 onCheckedChange = {
-                    switchDoneStatus(task.id)
+                    switchDoneStatus()
                 }
             )
             Text(

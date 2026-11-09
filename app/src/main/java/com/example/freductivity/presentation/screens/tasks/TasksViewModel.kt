@@ -31,9 +31,9 @@ class TasksViewModel @Inject constructor(
         getAllTasksUseCase()
             .onEach { tasks ->
                 _state.update { previousState ->
-                    val (finishedTasks, tasks) = tasks.partition { it.isDone }
+                    val (finishedTasks, currentTasks) = tasks.partition { it.isDone }
                     previousState.copy(
-                        tasks = tasks,
+                        currentTasks = currentTasks,
                         finishedTasks = finishedTasks
                     )
                 }
@@ -64,7 +64,7 @@ sealed interface TasksCommand {
 
 
 data class TasksState(
-    val tasks: List<Task> = listOf(),
+    val currentTasks: List<Task> = listOf(),
     val finishedTasks: List<Task> = listOf()
 
 ) {
